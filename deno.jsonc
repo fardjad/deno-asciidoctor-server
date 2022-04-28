@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "strict": true
+  },
+  "lint": {
+    "rules": {
+      "tags": ["recommended"]
+    },
+    "files": {
+      "include": ["."]
+    }
+  },
+  "tasks": {
+    "check": "dprint check && deno lint",
+    // deno linter doesn't support auto-fixing yet
+    "fix": "dprint fmt && deno lint"
+  }
+}
