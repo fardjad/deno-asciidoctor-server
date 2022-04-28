@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+export const indexTemplate = `<!DOCTYPE html>
 <html>
 
 <head>
@@ -21,3 +21,4 @@
 </body>
 
 </html>
+`;

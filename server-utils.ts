@@ -6,6 +6,7 @@ import {
   StringReader,
   Asciidoctor,
 } from "./deps.ts";
+import { indexTemplate } from "./template.ts";
 
 export const notFoundResponse = new Response(undefined, {
   status: 404,
@@ -44,11 +45,8 @@ export const serveFile = async (requestPath: string) => {
 };
 
 // serveDirectory
-const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
-const ejsReader = new StringReader(
-  Deno.readTextFileSync(path.join(__dirname, "./templates/index.html.ejs"))
-);
-const indexTemplate = await compileEjs(ejsReader);
+const compiledIndexEjs = await compileEjs(new StringReader(indexTemplate));
+
 const getDirectoryListing = async (dir: string) => {
   const entries: { name: string }[] = [];
   for await (const entry of Deno.readDir(dir)) {
@@ -66,7 +64,7 @@ export const serveDirectory = async (
   requestPath: string,
   rootDirectory: string
 ) => {
-  const body = await indexTemplate({
+  const body = await compiledIndexEjs({
     path,
     urlPathname: requestPath.slice(rootDirectory.length),
     entries: await getDirectoryListing(requestPath),
