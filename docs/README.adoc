@@ -1,0 +1,58 @@
+:nofooter:
+
+= deno-asciidoctor-server
+
+deno-asciidoctor-server is a minimal server built with Deno that serves Asciidoc documents as HTML
+
+I made an "always-fresh" Deno port of https://github.com/asciidoctor/asciidoctor.js[Asciidoctor.js] to make this project possible. Make sure to check out the port https://github.com/fardjad/deno-asciidoctor[here].
+
+== Features
+
+* Can be compiled to a self-contained executable
+* Serve Asciidoc documents as HTML
+* Directory indexes
+* Live-reload on save
+
+== Install
+
+[source,bash]
+----
+deno install --allow-net --allow-read -n deno-asciidoctor-server https://cdn.jsdelivr.net/gh/fardjad/deno-asciidoctor-server/app.ts
+----
+
+== Development
+
+=== Requirements
+
+* https://deno.land[Deno]
+* https://dprint.dev[dprint]
+* https://pre-commit.com[pre-commit]
+* https://commitizen-tools.github.io/commitizen[commitizen]
+
+=== Instructions
+
+. Clone the repository
+. Run `pre-commit install` to install/configure git hooks
+
+=== Updating dependencies
+
+*pre-commit repos*
+
+[source,bash]
+----
+pre-commit autoupdate
+----
+
+*Deno dependencies*
+
+See the <<todo>> section
+
+[[todo]]
+== Todo
+
+* [ ] Refactor `server-utils.ts` and make it more modular
+* [ ] Improve live-reload implementation
+* [ ] Implement a simple middleware/plugin architecture for the server
+* [ ] Make a CLI with https://cliffy.io[Cliffy]
+* [ ] Setup https://github.com/hayd/deno-udd[udd]
+* [ ] Add Asciidoctor.js plugin support

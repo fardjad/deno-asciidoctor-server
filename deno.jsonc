@@ -12,7 +12,7 @@
     }
   },
   "tasks": {
-    "check": "dprint check && deno lint",
+    "lint": "dprint check && deno lint",
     // deno linter doesn't support auto-fixing yet
     "fix": "dprint fmt && deno lint"
   }

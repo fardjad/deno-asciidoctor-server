@@ -1,6 +1,6 @@
 {
   "prettier": {},
-  "includes": ["**/*.{ts,tsx,js,jsx,cjs,mjs,json,md,toml,dockerfile}"],
+  "includes": ["**/*.{ts,js,json,md,yaml,yml}"],
   "excludes": ["**/lock.json"],
   "plugins": [
     "https://plugins.dprint.dev/prettier-0.7.0.json@4e846f43b32981258cef5095b3d732522947592e090ef52333801f9d6e8adb33"

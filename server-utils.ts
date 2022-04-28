@@ -1,4 +1,5 @@
 import type { EventEmitter } from "./deps.ts";
+import type { Events as FileWatcherEvents } from "./file-watcher.ts";
 import {
   path,
   compileEjs,
@@ -81,7 +82,7 @@ const asciidoctor = Asciidoctor();
 export const serveAsciidoc = async (
   requestPath: string,
   serverPort: number,
-  serverHost: string = "localhost"
+  serverHost = "localhost"
 ) => {
   let adoc = await Deno.readTextFile(requestPath);
   adoc = `${adoc}\n${createLivereloadBlock({ serverPort, serverHost })}`;
@@ -121,9 +122,9 @@ const createReloadMessage = (p: string) =>
     command: "reload",
     path: p,
   });
-export const handleLivereload = async (
+export const handleLivereload = (
   request: Request,
-  fileWatcherEventEmitter: EventEmitter<any>
+  fileWatcherEventEmitter: EventEmitter<FileWatcherEvents>
 ) => {
   const { socket, response } = Deno.upgradeWebSocket(request);
   const listener = (p: string) => {
