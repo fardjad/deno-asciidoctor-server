@@ -1,5 +1,6 @@
 import type { EventEmitter } from "./deps.ts";
 import type { Events as FileWatcherEvents } from "./file-watcher.ts";
+
 import {
   path,
   compileEjs,
@@ -7,7 +8,7 @@ import {
   StringReader,
   Asciidoctor,
 } from "./deps.ts";
-import { indexTemplate } from "./template.ts";
+import { indexTemplate, liveReloadBlockTemplate } from "./templates.ts";
 
 export const notFoundResponse = new Response(undefined, {
   status: 404,
@@ -79,14 +80,24 @@ export const serveDirectory = async (
 
 // serveAsciidoc
 const asciidoctor = Asciidoctor();
+const compiledLivereloadBlock = await compileEjs(
+  new StringReader(liveReloadBlockTemplate)
+);
 export const serveAsciidoc = async (
   requestPath: string,
   serverPort: number,
   serverHost = "localhost"
 ) => {
   let adoc = await Deno.readTextFile(requestPath);
-  adoc = `${adoc}\n${createLivereloadBlock({ serverPort, serverHost })}`;
-  const html = asciidoctor.convert(adoc) as string;
+  const livereloadBlock = await compiledLivereloadBlock({
+    serverPort,
+    serverHost,
+  });
+  adoc = `${adoc}\n${livereloadBlock}`;
+  const html = asciidoctor.convert(adoc, {
+    safe: "server",
+    standalone: true,
+  }) as string;
 
   return new Response(html, {
     status: 200,
@@ -95,26 +106,10 @@ export const serveAsciidoc = async (
 };
 
 // live reload
-const createLivereloadBlock = ({
-  serverHost,
-  serverPort,
-}: {
-  serverHost: string;
-  serverPort: number;
-}) => `
-++++
-<script>
-window.LiveReloadOptions = { host: "${serverHost}", port: ${serverPort} };
-</script>
-<script src="https://cdn.jsdelivr.net/npm/livereload.js@2.2.2/dist/livereload.js"></script>
-++++
-`;
+const PROTOCOL_7 = "http://livereload.com/protocols/official-7";
 const helloMessage = JSON.stringify({
   command: "hello",
-  protocols: [
-    "http://livereload.com/protocols/official-6",
-    "http://livereload.com/protocols/official-7",
-  ],
+  protocols: [PROTOCOL_7],
 });
 
 const createReloadMessage = (p: string) =>

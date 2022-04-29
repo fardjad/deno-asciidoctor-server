@@ -22,3 +22,12 @@ export const indexTemplate = `<!DOCTYPE html>
 
 </html>
 `;
+
+export const liveReloadBlockTemplate = `
+++++
+<script>
+window.LiveReloadOptions = { host: "<%= serverHost %>", port: <%= serverPort %> };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/livereload.js/dist/livereload.js"></script>
+++++
+`;

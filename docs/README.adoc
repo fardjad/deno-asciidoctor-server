@@ -1,10 +1,15 @@
 :nofooter:
+:stylesheet: ./asciidoctor.css
+:linkcss:
+:toc: macro
 
 = deno-asciidoctor-server
 
 deno-asciidoctor-server is a minimal server built with Deno that serves Asciidoc documents as HTML
 
-I made an "always-fresh" Deno port of https://github.com/asciidoctor/asciidoctor.js[Asciidoctor.js] to make this project possible. Make sure to check out the port https://github.com/fardjad/deno-asciidoctor[here].
+_I've made an "always-fresh" Deno port of https://github.com/asciidoctor/asciidoctor.js[Asciidoctor.js] to make this project possible. Make sure to check out the port https://github.com/fardjad/deno-asciidoctor[here]._
+
+toc::[]
 
 == Features
 
@@ -33,6 +38,7 @@ deno install --allow-net --allow-read -n deno-asciidoctor-server https://cdn.jsd
 
 . Clone the repository
 . Run `pre-commit install` to install/configure git hooks
+. Make your changes and submit a PR
 
 === Updating dependencies
 
