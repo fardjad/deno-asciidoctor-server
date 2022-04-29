@@ -49,7 +49,7 @@ const handler = async (request: Request) => {
   }
 
   // asciidoc
-  if ([".adoc"].includes(path.extname(requestPath))) {
+  if ([".adoc", ".asciidoc", ".acs"].includes(path.extname(requestPath))) {
     return serveAsciidoc(requestPath, PORT);
   }
 

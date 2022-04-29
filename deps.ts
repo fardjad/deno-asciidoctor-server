@@ -6,5 +6,5 @@ export { readableStreamFromReader } from "https://deno.land/std@0.136.0/streams/
 export { compile as compileEjs } from "https://deno.land/x/dejs@0.10.2/mod.ts";
 export { EventEmitter } from "https://deno.land/x/event@2.0.0/mod.ts";
 
-import Asciidoctor from "https://deno.land/x/asciidoctor@2.2.6/mod.js";
+import Asciidoctor from "https://deno.land/x/asciidoctor@2.2.6-xhr-fix/mod.js";
 export { Asciidoctor };
