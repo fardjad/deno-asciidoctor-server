@@ -1,4 +1,4 @@
 commitizen:
   name: cz_conventional_commits
   update_changelog_on_bump: true
-  version: 0.1.0
+  version: 0.2.0
