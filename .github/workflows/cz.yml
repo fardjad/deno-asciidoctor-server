@@ -25,5 +25,6 @@ jobs:
         if: "${{ env.REVISION != '' }}"
         run: |
           gh release create "${{ env.REVISION }}" --notes "$(cat release-notes.md)"
+          gh workflow run compile-and-upload -f ref="${{ env.REVISION }}"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}

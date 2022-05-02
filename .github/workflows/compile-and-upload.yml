@@ -1,0 +1,56 @@
+name: compile-and-upload
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "The release tag"
+        required: true
+
+jobs:
+  compile-and-upload:
+    strategy:
+      matrix:
+        va:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+    runs-on: ${{ matrix.va }}
+    name: Compile and upload
+    steps:
+      - name: Check out
+        uses: actions/checkout@main
+        with:
+          ref: ${{ github.event.inputs.ref }}
+      - uses: denoland/setup-deno@main
+        with:
+          deno-version: v1.x
+      - name: Cache Deno dependencies
+        uses: actions/cache@main
+        env:
+          cache-name: cache-deno-dependencies
+        with:
+          path: ~/.cache/deno
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
+      - name: Get target info
+        id: get_target_info
+        run: |
+          deno run .github/scripts/get-target-info.ts
+      - name: Compile (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          deno.exe compile -A -o "${env:FILE_NAME}" app.ts
+          gh release upload "${{ github.event.inputs.ref }}" "${env:FILE_NAME}" --clobber
+        env:
+          FILE_NAME: "deno-asciidoctor-server-${{ steps.get_target_info.outputs.TARGET_INFO }}.exe"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compile (Nix)
+        if: ${{ runner.os != 'Windows' }}
+        run: |
+          deno compile -A -o "$FILE_NAME" get-target-info.ts
+          gh release upload "${{ github.event.inputs.ref }}" "$FILE_NAME" --clobber
+        env:
+          FILE_NAME: "deno-asciidoctor-server-${{ steps.get_target_info.outputs.TARGET_INFO }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
