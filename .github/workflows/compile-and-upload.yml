@@ -41,7 +41,7 @@ jobs:
       - name: Compile (Windows)
         if: ${{ runner.os == 'Windows' }}
         run: |
-          deno.exe compile -A -o "${env:FILE_NAME}" app.ts
+          deno.exe compile --allow-read --allow-net -o "${env:FILE_NAME}" app.ts
           gh release upload "${{ github.event.inputs.ref }}" "${env:FILE_NAME}" --clobber
         env:
           FILE_NAME: "deno-asciidoctor-server-${{ steps.get_target_info.outputs.TARGET_INFO }}.exe"
@@ -49,7 +49,7 @@ jobs:
       - name: Compile (Nix)
         if: ${{ runner.os != 'Windows' }}
         run: |
-          deno compile -A -o "$FILE_NAME" get-target-info.ts
+          deno compile --allow-read --allow-net -o "$FILE_NAME" app.ts
           gh release upload "${{ github.event.inputs.ref }}" "$FILE_NAME" --clobber
         env:
           FILE_NAME: "deno-asciidoctor-server-${{ steps.get_target_info.outputs.TARGET_INFO }}"

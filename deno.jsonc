@@ -14,6 +14,7 @@
   "tasks": {
     "lint": "dprint check && deno lint",
     // deno linter doesn't support auto-fixing yet
-    "fix": "dprint fmt && deno lint"
+    "fix": "dprint fmt && deno lint",
+    "lock-write": "deno cache --lock lock.json --lock-write app.ts"
   }
 }
