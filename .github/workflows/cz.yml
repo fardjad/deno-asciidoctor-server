@@ -16,11 +16,13 @@ jobs:
           fetch-depth: 0
       - name: Create bump and changelog
         uses: commitizen-tools/commitizen-action@master
+        continue-on-error: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
           changelog_increment_filename: release-notes.md
       - name: Release
+        if: "${{ env.REVISION != '' }}"
         run: |
           gh release create "${{ env.REVISION }}" --notes "$(cat release-notes.md)"
         env:
