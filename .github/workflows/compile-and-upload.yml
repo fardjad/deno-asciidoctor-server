@@ -11,11 +11,12 @@ jobs:
   compile-and-upload:
     strategy:
       matrix:
-        va:
-          - windows-latest
-          - ubuntu-latest
-          - macos-latest
-    runs-on: ${{ matrix.va }}
+        target:
+          - x86_64-unknown-linux-gnu
+          - x86_64-pc-windows-msvc
+          - x86_64-apple-darwin
+          - aarch64-apple-darwin
+    runs-on: ubuntu-latest
     name: Compile and upload
     steps:
       - name: Check out
@@ -34,23 +35,10 @@ jobs:
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/lock.json') }}
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-
-      - name: Get target info
-        id: get_target_info
+      - name: Compile and upload binaries
         run: |
-          deno run .github/scripts/get-target-info.ts
-      - name: Compile (Windows)
-        if: ${{ runner.os == 'Windows' }}
-        run: |
-          deno.exe compile --allow-read --allow-net -o "${env:FILE_NAME}" app.ts
-          gh release upload "${{ github.event.inputs.ref }}" "${env:FILE_NAME}" --clobber
-        env:
-          FILE_NAME: "deno-asciidoctor-server-${{ steps.get_target_info.outputs.TARGET_INFO }}.exe"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Compile (Nix)
-        if: ${{ runner.os != 'Windows' }}
-        run: |
-          deno compile --allow-read --allow-net -o "$FILE_NAME" app.ts
+          deno compile --target ${{ matrix.target }} --allow-read --allow-net -o "$FILE_NAME" app.ts
           gh release upload "${{ github.event.inputs.ref }}" "$FILE_NAME" --clobber
         env:
-          FILE_NAME: "deno-asciidoctor-server-${{ steps.get_target_info.outputs.TARGET_INFO }}"
+          FILE_NAME: "deno-asciidoctor-server-${{ matrix.target }}${{ (matrix.target == 'x86_64-pc-windows-msvc' && '.exe') || '' }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
